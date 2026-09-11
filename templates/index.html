@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Folio — Find your next great read</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="/">Fol<span class="brand-mark">io</span></a>
+      <div class="nav-links">
+        <a href="/" class="active">Home</a>
+        <a href="/recommend">Recommendations</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="wrap">
+      <h1>Find your next great read, chosen by readers like you.</h1>
+      <p class="lede">Folio ranks books by what thousands of real readers rated highest, and can match you to your next favorite based on what you just finished.</p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="num">{{ book_name|length }}</span>
+          <span class="label">books on the shelf</span>
+        </div>
+        <div class="hero-stat">
+          <span class="num">Top 50</span>
+          <span class="label">by reader rating</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Most loved right now</h2>
+        <span class="sub">Ranked by average rating and number of readers</span>
+      </div>
+
+      {% if book_name and book_name|length > 0 %}
+      <div class="book-grid">
+        {% for i in range(book_name|length) %}
+        <div class="book-card">
+          <div class="book-cover">
+            <img src="{{ image[i] }}" alt="Cover of {{ book_name[i] }}"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="fallback" style="display:none;">{{ book_name[i] }}</div>
+          </div>
+          <p class="book-title">{{ book_name[i] }}</p>
+          <p class="book-author">{{ author[i] }}</p>
+          <div class="book-rating">
+            ★ {{ "%.1f"|format(rating[i]) }}
+            <span class="votes">({{ votes[i] }} ratings)</span>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="empty-note">No books to show yet. Once the catalog is loaded, the top-rated titles will appear here.</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="wrap footer" style="border:none; margin:0; padding:0;">
+      <span>Folio</span>
+      <span>Built with reader ratings, not guesswork</span>
+    </div>
+  </footer>
+
+</body>
+</html>

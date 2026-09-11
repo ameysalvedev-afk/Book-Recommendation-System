@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recommendations — Folio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="/">Fol<span class="brand-mark">io</span></a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/recommend" class="active">Recommendations</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" style="padding-bottom: 40px;">
+    <div class="wrap">
+      <h1 style="max-width: 18ch;">What did you just finish reading?</h1>
+      <p class="lede">Tell us a title from our catalog, and we'll find five books that readers with similar taste loved next.</p>
+
+      <form class="search-card" action="/recommend_books" method="post">
+        <label for="user_input">Book title</label>
+        <div class="search-row">
+          <input type="text" id="user_input" name="user_input" placeholder="e.g. The Hobbit" required
+                 value="{{ request.form.get('user_input', '') }}">
+          <button class="btn" type="submit">Show recommendations</button>
+        </div>
+
+        {% if error %}
+        <p class="error-note">{{ error }}</p>
+        {% endif %}
+      </form>
+    </div>
+  </header>
+
+  {% if data %}
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Readers who liked that also read</h2>
+        <span class="sub">Based on rating similarity</span>
+      </div>
+
+      <div class="book-grid">
+        {% for item in data %}
+        <div class="book-card">
+          <div class="book-cover">
+            <img src="{{ item.image }}" alt="Cover of {{ item.title }}"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="fallback" style="display:none;">{{ item.title }}</div>
+          </div>
+          <p class="book-title">{{ item.title }}</p>
+          <p class="book-author">{{ item.author }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  <footer class="footer">
+    <div class="wrap footer" style="border:none; margin:0; padding:0;">
+      <span>Folio</span>
+      <span>Built with reader ratings, not guesswork</span>
+    </div>
+  </footer>
+
+</body>
+</html>
